@@ -1,4 +1,4 @@
-name: Build and Deploy Vite site to GitHub Pages
+name: Build and Deploy User Site
 
 on:
   push:
@@ -35,11 +35,13 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./build   # ← dist → build 로 수정됨
+          path: ./build
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
