@@ -90,9 +90,7 @@ export default function App() {
             </div>
             
             {/* Scroll Indicator */}
-            <div className="absolute bottom-12 animate-bounce">
-              <ChevronDown className="size-10 text-cyan-400" />
-            </div>
+            {/* Removed bounce animation */}
           </div>
         </div>
       )}
