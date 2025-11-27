@@ -33,20 +33,12 @@ export function BreakEven3DChart({ result }: BreakEven3DChartProps) {
         y: totalCosts, // Y axis: Total Cost ($)
         z: transposedZ, // Z axis: Required Efficiency (%) - TRANSPOSED!
         colorscale: [
-          [0, 'rgb(26, 150, 65)'],      // Green (low efficiency - good)
-          [0.25, 'rgb(166, 217, 106)'],
-          [0.5, 'rgb(255, 255, 191)'],
-          [0.75, 'rgb(253, 174, 97)'],
-          [1, 'rgb(215, 48, 39)']       // Red (high efficiency - bad)
+          [0, '#440154'],      // Viridis purple
+          [0.25, '#31688e'],   // Viridis blue
+          [0.5, '#35b779'],    // Viridis green
+          [0.75, '#b5de2b'],   // Viridis yellow-green
+          [1, '#fde724']       // Viridis yellow
         ],
-        contours: {
-          z: {
-            show: true,
-            usecolormap: true,
-            highlightcolor: "#42f462",
-            project: { z: true }
-          }
-        },
         hovertemplate: 
           '<b>Investment Ratio</b>: %{x:.3f}%<br>' +
           '<b>Total Cost</b>: $%{y:,.0f}<br>' +

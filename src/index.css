@@ -145,6 +145,7 @@
     --leading-relaxed: 1.625;
     --leading-loose: 2;
     --radius-3xl: 1.5rem;
+    --animate-bounce: bounce 1s infinite;
     --blur-xl: 24px;
     --default-transition-duration: .15s;
     --default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
@@ -520,6 +521,10 @@
     right: calc(var(--spacing) * 5);
   }
 
+  .bottom-12 {
+    bottom: calc(var(--spacing) * 12);
+  }
+
   .col-start-2 {
     grid-column-start: 2;
   }
@@ -874,6 +879,10 @@
 
   .transform {
     transform: var(--tw-rotate-x) var(--tw-rotate-y) var(--tw-rotate-z) var(--tw-skew-x) var(--tw-skew-y);
+  }
+
+  .animate-bounce {
+    animation: var(--animate-bounce);
   }
 
   .animate-in {
@@ -1726,6 +1735,10 @@
 
   .text-card-foreground {
     color: var(--card-foreground);
+  }
+
+  .text-cyan-400 {
+    color: var(--color-cyan-400);
   }
 
   .text-emerald-600 {
@@ -3022,6 +3035,18 @@ html {
   syntax: "*";
   inherits: false;
   initial-value: 1;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    animation-timing-function: cubic-bezier(.8, 0, 1, 1);
+    transform: translateY(-25%);
+  }
+
+  50% {
+    animation-timing-function: cubic-bezier(0, 0, .2, 1);
+    transform: none;
+  }
 }
 
 @keyframes enter {
