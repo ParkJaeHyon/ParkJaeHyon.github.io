@@ -12,24 +12,24 @@ export function ModeSelector({ value, onChange }: ModeSelectorProps) {
       value: 1,
       icon: TrendingUp,
       title: 'Mode 1',
-      subtitle: 'Economic Analysis Based on Accident Prevention Efficiency',
-      description: 'Analyze the cost reduction effects as accident prevention efficiency increases with safety technology adoption',
+      subtitle: 'Efficiency Threshold Simulation',
+      description: 'Explore the minimum efficiency and investment ratio required for the technology to be economically viable',
       color: 'blue'
     },
     {
       value: 2,
       icon: Users,
       title: 'Mode 2',
-      subtitle: 'Labor Reduction Equipment Analysis',
-      description: 'Analyze cost reduction effects based on worker reduction rates',
+      subtitle: 'Safety Robot Impact Analysis',
+      description: 'Analyze the combined effects of labor reduction and accident prevention from deploying safety robots',
       color: 'green'
     },
     {
       value: 3,
       icon: Shield,
       title: 'Mode 3',
-      subtitle: 'Technology Adoption Economic Analysis (Cost vs Efficiency Comparison)',
-      description: 'Instantly verify adoption value by entering cost and efficiency',
+      subtitle: 'Worker-Level Safety Tech Analysis',
+      description: 'Simulate the economic benefits of deploying personal safety devices based on adoption rate and cost per worker',
       color: 'purple'
     }
   ];

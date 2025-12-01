@@ -38,6 +38,10 @@ export interface SimulationParams {
   specificParams: Record<string, number>;
   equipmentCount: number;
   
+  // Mode 1 specific
+  technologyEfficiency?: number; // 기술 도입 효율 (0-100%)
+  investmentRatio?: number; // 투자 비율 (% of Total Cost)
+  
   // Mode 2 specific
   workerReductionRate?: number; // 0-100
   

@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Badge } from './ui/badge';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { useEffect } from 'react';
+import { CheckCircle2, XCircle, TrendingUp, DollarSign, Users } from 'lucide-react';
 
 interface SimulationResultsProps {
   result: SimulationResult;
@@ -177,6 +178,13 @@ export function SimulationResults({ result }: SimulationResultsProps) {
               </div>
             </div>
           )}
+          
+          {/* Mode 1 Investment Recommendation Box */}
+          {result.analysisMode === 1 && result.calculationDetails && (
+            <div className="mt-8 pt-8 border-t-2">
+              <InvestmentRecommendation result={result} />
+            </div>
+          )}
         </CardContent>
       </Card>
       
@@ -332,9 +340,207 @@ export function SimulationResults({ result }: SimulationResultsProps) {
                 </LineChart>
               </ResponsiveContainer>
             </div>
+            
+            {/* Optimal Workforce Recommendation for Mode 3 */}
+            <OptimalWorkforceRecommendation result={result} />
           </CardContent>
         </Card>
       )}
+      
+      {/* Privacy Notice */}
+      <Card className="border-2 border-gray-200 bg-gray-50">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+              <span className="text-2xl">🔒</span>
+            </div>
+            <div>
+              <h3 className="text-lg mb-2 font-semibold">Privacy & Data Security</h3>
+              <p className="text-gray-700">
+                All user inputs are not stored and are immediately discarded after calculation.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// Investment Recommendation Component for Mode 1
+function InvestmentRecommendation({ result }: { result: SimulationResult }) {
+  // Calculate if investment is economically viable
+  const efficiency = (result.calculationDetails as any)?.technologyEfficiency || 0;
+  const investmentRatio = (result.calculationDetails as any)?.investmentRatio || 0;
+  const investmentCost = result.totalCost * (investmentRatio / 100);
+  const expectedSavings = result.meanSafetyCost * (efficiency / 100);
+  const netBenefit = expectedSavings - investmentCost;
+  const isViable = netBenefit >= 0;
+  
+  return (
+    <div className={`p-8 rounded-2xl border-2 ${isViable ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-300' : 'bg-gradient-to-br from-red-50 to-orange-50 border-red-300'}`}>
+      <div className="flex items-start gap-4">
+        <div className={`w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 ${isViable ? 'bg-green-500' : 'bg-red-500'}`}>
+          {isViable ? (
+            <CheckCircle2 className="size-10 text-white" />
+          ) : (
+            <XCircle className="size-10 text-white" />
+          )}
+        </div>
+        
+        <div className="flex-1">
+          <h3 className="text-2xl mb-4">Investment Recommendation</h3>
+          
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <p className="text-sm text-muted-foreground mb-1">Technology Efficiency</p>
+                <p className="text-2xl font-semibold text-blue-600">{efficiency.toFixed(2)}%</p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <p className="text-sm text-muted-foreground mb-1">Investment Ratio</p>
+                <p className="text-2xl font-semibold text-orange-600">{investmentRatio.toFixed(3)}%</p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <p className="text-sm text-muted-foreground mb-1">Investment Cost</p>
+                <p className="text-2xl font-semibold text-purple-600">{formatCurrency(investmentCost)}</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <div className="flex items-center gap-2 mb-1">
+                  <TrendingUp className="size-4 text-green-600" />
+                  <p className="text-sm text-muted-foreground">Expected Savings</p>
+                </div>
+                <p className="text-2xl font-semibold text-green-600">{formatCurrency(expectedSavings)}</p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <div className="flex items-center gap-2 mb-1">
+                  <DollarSign className="size-4 text-emerald-600" />
+                  <p className="text-sm text-muted-foreground">Net Benefit</p>
+                </div>
+                <p className={`text-2xl font-semibold ${isViable ? 'text-emerald-600' : 'text-red-600'}`}>
+                  {formatCurrency(netBenefit)}
+                </p>
+              </div>
+            </div>
+            
+            <div className={`p-6 rounded-xl border-2 ${isViable ? 'bg-green-100 border-green-400' : 'bg-red-100 border-red-400'}`}>
+              <p className={`text-lg ${isViable ? 'text-green-900' : 'text-red-900'}`}>
+                {isViable ? (
+                  <>
+                    <strong>✅ Based on the current Total Cost and Efficiency settings, this technology investment is economically favorable.</strong>
+                    <br />
+                    <span className="text-base">The expected accident cost savings ({formatCurrency(expectedSavings)}) exceed the investment cost ({formatCurrency(investmentCost)}), resulting in a positive net benefit of {formatCurrency(netBenefit)}.</span>
+                  </>
+                ) : (
+                  <>
+                    <strong>❌ Under these conditions, the investment savings are insufficient compared to the cost.</strong>
+                    <br />
+                    <span className="text-base">The expected accident cost savings ({formatCurrency(expectedSavings)}) are less than the investment cost ({formatCurrency(investmentCost)}), resulting in a negative net benefit of {formatCurrency(netBenefit)}.</span>
+                  </>
+                )}
+              </p>
+            </div>
+            
+            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+              <p className="text-sm text-gray-700">
+                <strong>Note:</strong> Use the Break-even Analysis tab to explore how different investment ratios and total costs affect the required efficiency for positive returns.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Optimal Workforce Recommendation Component for Mode 3
+function OptimalWorkforceRecommendation({ result }: { result: SimulationResult }) {
+  // Calculate optimal workforce based on break-even point
+  const safetyEfficiency = (result.calculationDetails as any)?.safetyEfficiency || 0;
+  const wearableUnitPrice = (result.calculationDetails as any)?.wearableUnitPrice || 0;
+  const wearableApplyRate = (result.calculationDetails as any)?.wearableApplyRate || 0;
+  const currentWorkers = result.workers;
+  const appliedWorkers = Math.round(currentWorkers * (wearableApplyRate / 100));
+  
+  // Calculate break-even workforce
+  const costReductionPerWorker = (result.meanSafetyCost * (safetyEfficiency / 100)) / currentWorkers;
+  const costPerWorker = wearableUnitPrice;
+  const minWorkersNeeded = Math.ceil(costPerWorker / costReductionPerWorker);
+  
+  const isViable = appliedWorkers >= minWorkersNeeded;
+  const netBenefit = result.netBenefit || 0;
+  
+  return (
+    <div className={`mt-6 p-8 rounded-2xl border-2 ${isViable ? 'bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-300' : 'bg-gradient-to-br from-orange-50 to-red-50 border-orange-300'}`}>
+      <div className="flex items-start gap-4">
+        <div className={`w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 ${isViable ? 'bg-blue-500' : 'bg-orange-500'}`}>
+          <Users className="size-10 text-white" />
+        </div>
+        
+        <div className="flex-1">
+          <h3 className="text-2xl mb-4">Optimal Workforce Analysis</h3>
+          
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <p className="text-sm text-muted-foreground mb-1">Total Workers</p>
+                <p className="text-2xl font-semibold text-gray-700">{formatNumber(currentWorkers, 0)}</p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <p className="text-sm text-muted-foreground mb-1">Application Rate</p>
+                <p className="text-2xl font-semibold text-blue-600">{wearableApplyRate.toFixed(1)}%</p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <p className="text-sm text-muted-foreground mb-1">Workers Applied</p>
+                <p className="text-2xl font-semibold text-cyan-600">{appliedWorkers}</p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <p className="text-sm text-muted-foreground mb-1">Min. Required</p>
+                <p className="text-2xl font-semibold text-purple-600">{minWorkersNeeded}</p>
+              </div>
+            </div>
+            
+            <div className={`p-6 rounded-xl border-2 ${isViable ? 'bg-blue-100 border-blue-400' : 'bg-orange-100 border-orange-400'}`}>
+              <p className={`text-lg ${isViable ? 'text-blue-900' : 'text-orange-900'}`}>
+                {isViable ? (
+                  <>
+                    <strong>✅ Based on economic criteria, the technology should be applied to at least {minWorkersNeeded} workers for a viable investment.</strong>
+                    <br />
+                    <span className="text-base">Current application ({appliedWorkers} workers) meets the minimum requirement. Net benefit: {formatCurrency(netBenefit)}.</span>
+                  </>
+                ) : (
+                  <>
+                    <strong>❌ Under the current workforce scale, subscription-based technology investment is inefficient.</strong>
+                    <br />
+                    <span className="text-base">You need to apply the technology to at least {minWorkersNeeded} workers, but currently only {appliedWorkers} workers are covered. Consider increasing the application rate or workforce size.</span>
+                  </>
+                )}
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <p className="text-sm text-muted-foreground mb-1">Cost per Worker</p>
+                <p className="text-xl font-semibold text-orange-600">{formatCurrency(wearableUnitPrice)}</p>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <p className="text-sm text-muted-foreground mb-1">Savings per Worker</p>
+                <p className="text-xl font-semibold text-green-600">{formatCurrency(costReductionPerWorker)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

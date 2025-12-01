@@ -38,6 +38,10 @@ export function SimulationInputForm({
   const [safetyEfficiency, setSafetyEfficiency] = useState<number>(40);
   const [techCost, setTechCost] = useState<number>(10000); // 월 $10,000 (달러)
   
+  // Mode 1 specific
+  const [technologyEfficiency, setTechnologyEfficiency] = useState<number>(20); // 기술 효율 %
+  const [investmentRatio, setInvestmentRatio] = useState<number>(0.05); // 투자 비율 %
+  
   // Constants - Fixed values with editable option
   const [workerDailyWage, setWorkerDailyWage] = useState<number>(WORKER_DAILY_WAGE_USD);
   const [equipmentDriverDailyWage, setEquipmentDriverDailyWage] = useState<number>(EQUIPMENT_DRIVER_DAILY_WAGE_USD);
@@ -72,7 +76,10 @@ export function SimulationInputForm({
       iterations: 1000
     };
     
-    if (analysisMode === 2) {
+    if (analysisMode === 1) {
+      params.technologyEfficiency = technologyEfficiency;
+      params.investmentRatio = investmentRatio;
+    } else if (analysisMode === 2) {
       params.workerReductionRate = workerReductionRate;
       params.techCost = techCost; // Already in USD
     } else if (analysisMode === 3) {
@@ -147,6 +154,61 @@ export function SimulationInputForm({
           </div>
           
           {/* Mode-specific Parameters */}
+          {analysisMode === 1 && (
+            <div className="space-y-4">
+              <h3 className="border-b pb-2">Accident Cost Reduction Technology Settings</h3>
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                <h4 className="text-sm mb-2">💡 Mode 1 Economic Calculation Method</h4>
+                <div className="text-xs text-gray-700 space-y-2">
+                  <p><strong>① Technology Efficiency (%)</strong><br/>
+                  The percentage reduction in accident costs achieved by the technology (e.g., 20% means the technology reduces accident costs by 20%).</p>
+                  <p><strong>② Investment Ratio (% of Total Cost)</strong><br/>
+                  The percentage of total construction cost allocated to technology investment (e.g., 0.05% means 0.05% of total cost is invested in the technology).</p>
+                  <p><strong>③ Break-even Analysis</strong><br/>
+                  The system will calculate the required efficiency level at various investment ratios and total costs to achieve positive net benefit.</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="technologyEfficiency">Technology Efficiency (%) *</Label>
+                  <Input
+                    id="technologyEfficiency"
+                    type="number"
+                    value={technologyEfficiency}
+                    onChange={(e) => setTechnologyEfficiency(Number(e.target.value))}
+                    min={0}
+                    max={100}
+                    step={0.1}
+                    required
+                  />
+                  <p className="text-xs text-muted-foreground">How much the technology reduces accident costs (0 ~ 100%)</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="investmentRatio">Investment Ratio (% of Total Cost) *</Label>
+                  <Input
+                    id="investmentRatio"
+                    type="number"
+                    value={investmentRatio}
+                    onChange={(e) => setInvestmentRatio(Number(e.target.value))}
+                    min={0}
+                    max={10}
+                    step={0.01}
+                    required
+                  />
+                  <p className="text-xs text-muted-foreground">Percentage of total cost invested in technology (e.g., 0.05%)</p>
+                </div>
+              </div>
+              
+              <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg">
+                <p className="text-xs text-gray-700">
+                  <strong>Note:</strong> The above two inputs (Technology Efficiency % and Investment Ratio %) are key variables used to determine economic feasibility as Total Cost varies in the Break-even analysis.
+                </p>
+              </div>
+            </div>
+          )}
+          
           {analysisMode === 2 && (
             <div className="space-y-4">
               <h3 className="border-b pb-2">Labor-Reducing Equipment Settings</h3>
@@ -335,6 +397,18 @@ export function SimulationInputForm({
               </CollapsibleContent>
             </div>
           </Collapsible>
+          
+          {/* Privacy Notice */}
+          <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-4">
+            <div className="flex justify-center items-center gap-3">
+              <span className="text-xl flex-shrink-0">🔒</span>
+              <div>
+                <p className="text-gray-700 text-center">
+                  All user inputs are not stored and are immediately discarded after calculation.
+                </p>
+              </div>
+            </div>
+          </div>
           
           <Button 
             type="submit" 

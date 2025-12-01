@@ -476,7 +476,10 @@ export function runMonteCarloSimulation(params: SimulationParams): SimulationRes
       monthlyWage: monthlyWage,
       dailyWage: params.workerDailyWage,
       wearableUnitPrice: params.wearableUnitPrice,
-      wearableApplyRate: params.wearableApplyRate
+      wearableApplyRate: params.wearableApplyRate,
+      technologyEfficiency: params.technologyEfficiency,
+      investmentRatio: params.investmentRatio,
+      safetyEfficiency: params.safetyEfficiency
     },
     meanSafetyCost,
     stdSafetyCost,

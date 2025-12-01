@@ -7,9 +7,10 @@ import { SimulationResults } from './components/SimulationResults';
 import { BreakEven3DChart } from './components/BreakEven3DChart';
 import { MonteCarloDetails } from './components/MonteCarloDetails';
 import { SystemInfo } from './components/SystemInfo';
+import { HowToUse } from './components/HowToUse';
 import { runMonteCarloSimulation } from './utils/monteCarloSimulation';
 import { Button } from './components/ui/button';
-import { RefreshCw, BarChart3, Info, Cpu, ChevronDown, Mail } from 'lucide-react';
+import { RefreshCw, BarChart3, Info, Cpu, ChevronDown, Mail, BookOpen } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 import { ImageWithFallback } from './components/figma/ImageWithFallback';
 
@@ -19,6 +20,7 @@ export default function App() {
   const [isSimulating, setIsSimulating] = useState(false);
   const [result, setResult] = useState<SimulationResult | null>(null);
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
+  const [showHowToUse, setShowHowToUse] = useState(false);
   
   const handleSimulate = async (params: SimulationParams) => {
     setIsSimulating(true);
@@ -39,11 +41,16 @@ export default function App() {
     setCurrentStep(1);
   };
   
+  // Show How to Use page
+  if (showHowToUse) {
+    return <HowToUse onBack={() => setShowHowToUse(false)} />;
+  }
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
       {/* Hero Section - Enhanced with Glassmorphism */}
       {!result && (
-        <div className="relative h-[60vh] min-h-[500px] bg-gradient-to-br from-slate-900 via-blue-900 to-cyan-900 overflow-hidden">
+        <div className="relative h-[60vh] min-h-[400px] md:min-h-[500px] bg-gradient-to-br from-slate-900 via-blue-900 to-cyan-900 overflow-hidden">
           {/* Background Image Overlay */}
           <div className="absolute inset-0 opacity-20">
             <ImageWithFallback
@@ -55,31 +62,40 @@ export default function App() {
           </div>
           
           {/* Hero Content */}
-          <div className="relative container mx-auto px-6 h-full flex flex-col justify-center items-center text-center text-white">
-            <div className="glass-dark rounded-3xl px-8 md:px-16 py-12 md:py-20 max-w-6xl backdrop-blur-xl w-full text-left">
-              <div className="flex items-center justify-center gap-4 mb-8">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
-                  <Cpu className="size-10 text-white" />
+          <div className="relative container mx-auto px-4 md:px-6 h-full flex flex-col justify-center items-center text-center text-white">
+            <div className="glass-dark rounded-2xl md:rounded-3xl px-4 md:px-8 lg:px-16 py-8 md:py-12 lg:py-20 max-w-6xl backdrop-blur-xl w-full text-left">
+              <div className="flex items-center justify-center gap-4 mb-6 md:mb-8">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
+                  <Cpu className="size-8 md:size-10 text-white" />
                 </div>
               </div>
               
-              <h1 className="text-4xl md:text-6xl lg:text-7xl tracking-tight mb-2 text-center pb-2">
+              <h1 className="text-3xl md:text-5xl lg:text-7xl tracking-tight mb-2 text-center pb-2">
                 Advanced Construction
-                <span className="block bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent mt-3 text-[64px] text-center pb-3 leading-tight overflow-visible">
+                <span className="block bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent mt-2 md:mt-3 text-4xl md:text-5xl lg:text-[64px] text-center pb-2 md:pb-3 leading-tight overflow-visible">
                   Technology Assessment
                 </span>
               </h1>
               
-              <p className="text-[20px] text-blue-100 mb-6 max-w-3xl mt-4 leading-loose mx-auto text-center pb-3">
+              <p className="text-base md:text-lg lg:text-[20px] text-blue-100 mb-4 md:mb-6 max-w-3xl mt-3 md:mt-4 leading-relaxed md:leading-loose mx-auto text-center pb-2 md:pb-3">
                 A platform for analyzing the economic viability of new construction technologies
-                <br />
-                focusing on accident prevention and labor reduction
+                <br className="hidden md:block" />
+                <span className="md:inline"> </span>focusing on accident prevention and labor reduction
               </p>
               
-              <div className="flex gap-4 justify-center mt-2">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mt-2">
+                <Button 
+                  size="lg"
+                  variant="outline"
+                  className="bg-white/10 border-2 border-white/30 hover:bg-white/20 text-white px-6 md:px-8 py-5 md:py-6 text-base md:text-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 w-full sm:w-auto"
+                  onClick={() => setShowHowToUse(true)}
+                >
+                  <BookOpen className="size-4 md:size-5 mr-2" />
+                  How to Use
+                </Button>
                 <Button 
                   size="lg" 
-                  className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-10 py-6 text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                  className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-8 md:px-10 py-5 md:py-6 text-base md:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 w-full sm:w-auto"
                   onClick={() => {
                     document.getElementById('step-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
@@ -97,31 +113,31 @@ export default function App() {
       
       {!result ? (
         /* Input Phase - 3 Step Cards */
-        <div id="step-section" className="py-24">
-          <div className="container mx-auto px-6 max-w-7xl">
+        <div id="step-section" className="py-12 md:py-24">
+          <div className="container mx-auto px-4 md:px-6 max-w-7xl">
             {/* Progress Steps */}
-            <div className="mb-16">
-              <div className="flex items-center justify-center gap-4">
+            <div className="mb-8 md:mb-16">
+              <div className="flex items-center justify-center gap-2 md:gap-4 overflow-x-auto">
                 {[1, 2, 3].map((step) => (
                   <div key={step} className="flex items-center">
-                    <div className={`flex items-center gap-3 transition-all duration-300 ${
+                    <div className={`flex items-center gap-2 md:gap-3 transition-all duration-300 ${
                       currentStep >= step ? 'text-blue-600' : 'text-gray-400'
                     }`}>
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
+                      <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
                         currentStep >= step 
                           ? 'border-blue-600 bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/50' 
                           : 'border-gray-300 bg-white'
                       }`}>
-                        <span className="font-semibold">{step}</span>
+                        <span className="font-semibold text-sm md:text-base">{step}</span>
                       </div>
-                      <span className="hidden md:inline font-medium">
+                      <span className="hidden md:inline font-medium text-sm md:text-base">
                         {step === 1 && 'Project Type'}
                         {step === 2 && 'Analysis Mode'}
                         {step === 3 && 'Simulation'}
                       </span>
                     </div>
                     {step < 3 && (
-                      <div className={`w-20 h-1 mx-4 rounded-full transition-all duration-300 ${
+                      <div className={`w-12 md:w-20 h-1 mx-2 md:mx-4 rounded-full transition-all duration-300 ${
                         currentStep > step ? 'bg-gradient-to-r from-blue-600 to-cyan-600' : 'bg-gray-300'
                       }`} />
                     )}
@@ -132,12 +148,12 @@ export default function App() {
             
             {/* Step 1: Project Type */}
             {currentStep === 1 && (
-              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="text-center mb-12">
-                  <h2 className="text-4xl mb-4 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="text-center mb-8 md:mb-12">
+                  <h2 className="text-3xl md:text-4xl mb-3 md:mb-4 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                     Select Project Type
                   </h2>
-                  <p className="text-xl text-muted-foreground">Choose the type of construction project to analyze</p>
+                  <p className="text-lg md:text-xl text-muted-foreground px-4">Choose the type of construction project to analyze</p>
                 </div>
                 
                 <ProjectTypeSelector 
@@ -145,11 +161,11 @@ export default function App() {
                   onChange={setProjectType}
                 />
                 
-                <div className="flex justify-center mt-12">
+                <div className="flex justify-center mt-8 md:mt-12">
                   <Button 
                     size="lg" 
                     onClick={() => setCurrentStep(2)}
-                    className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 px-16 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                    className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 px-12 md:px-16 py-5 md:py-6 text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto"
                   >
                     Next Step
                   </Button>
@@ -159,12 +175,12 @@ export default function App() {
             
             {/* Step 2: Analysis Mode */}
             {currentStep === 2 && (
-              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="text-center mb-12">
-                  <h2 className="text-4xl mb-4 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="text-center mb-8 md:mb-12">
+                  <h2 className="text-3xl md:text-4xl mb-3 md:mb-4 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                     Select Analysis Mode
                   </h2>
-                  <p className="text-xl text-muted-foreground">Choose the economic analysis method</p>
+                  <p className="text-lg md:text-xl text-muted-foreground px-4">Choose the economic analysis method</p>
                 </div>
                 
                 <ModeSelector 
@@ -172,19 +188,19 @@ export default function App() {
                   onChange={setAnalysisMode}
                 />
                 
-                <div className="flex justify-center gap-6 mt-12">
+                <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-6 mt-8 md:mt-12">
                   <Button 
                     size="lg" 
                     variant="outline"
                     onClick={() => setCurrentStep(1)}
-                    className="px-12 py-6 text-lg border-2 hover:bg-gray-50"
+                    className="px-8 md:px-12 py-5 md:py-6 text-base md:text-lg border-2 hover:bg-gray-50 w-full sm:w-auto"
                   >
                     Previous
                   </Button>
                   <Button 
                     size="lg" 
                     onClick={() => setCurrentStep(3)}
-                    className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 px-16 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                    className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 px-12 md:px-16 py-5 md:py-6 text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto"
                   >
                     Next Step
                   </Button>
@@ -194,12 +210,12 @@ export default function App() {
             
             {/* Step 3: Simulation Parameters */}
             {currentStep === 3 && (
-              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="text-center mb-12">
-                  <h2 className="text-4xl mb-4 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="text-center mb-8 md:mb-12">
+                  <h2 className="text-3xl md:text-4xl mb-3 md:mb-4 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                     Simulation Parameters
                   </h2>
-                  <p className="text-xl text-muted-foreground">Enter the required values for analysis</p>
+                  <p className="text-lg md:text-xl text-muted-foreground px-4">Enter the required values for analysis</p>
                 </div>
                 
                 <SystemInfo />
@@ -211,12 +227,12 @@ export default function App() {
                   isSimulating={isSimulating}
                 />
                 
-                <div className="flex justify-center mt-12">
+                <div className="flex justify-center mt-8 md:mt-12">
                   <Button 
                     size="lg" 
                     variant="outline"
                     onClick={() => setCurrentStep(2)}
-                    className="px-12 py-6 text-lg border-2 hover:bg-gray-50"
+                    className="px-8 md:px-12 py-5 md:py-6 text-base md:text-lg border-2 hover:bg-gray-50 w-full sm:w-auto"
                   >
                     Previous
                   </Button>
@@ -227,17 +243,17 @@ export default function App() {
         </div>
       ) : (
         /* Results Phase */
-        <div className="min-h-screen py-16">
-          <div className="container mx-auto px-6 max-w-7xl">
-            <div className="space-y-8">
+        <div className="min-h-screen py-8 md:py-16">
+          <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+            <div className="space-y-6 md:space-y-8">
               {/* Action Buttons - Enhanced with glassmorphism */}
-              <div className="glass rounded-2xl p-8 elevation-md border-2 border-white/50">
-                <div className="flex justify-between items-center">
+              <div className="glass rounded-xl md:rounded-2xl p-4 md:p-8 elevation-md border-2 border-white/50">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                   <div>
-                    <h2 className="text-3xl mb-2 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                    <h2 className="text-2xl md:text-3xl mb-1 md:mb-2 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                       Analysis Complete
                     </h2>
-                    <p className="text-lg text-muted-foreground">
+                    <p className="text-base md:text-lg text-muted-foreground">
                       Monte Carlo simulation completed with 1,000 iterations
                     </p>
                   </div>
@@ -245,9 +261,9 @@ export default function App() {
                     onClick={handleReset} 
                     variant="outline" 
                     size="lg"
-                    className="border-2 hover:bg-white/80 px-8 py-6 text-lg"
+                    className="border-2 hover:bg-white/80 px-6 md:px-8 py-4 md:py-6 text-base md:text-lg w-full md:w-auto"
                   >
-                    <RefreshCw className="size-5 mr-3" />
+                    <RefreshCw className="size-4 md:size-5 mr-2 md:mr-3" />
                     New Analysis
                   </Button>
                 </div>
@@ -255,32 +271,32 @@ export default function App() {
               
               {/* Results Tabs */}
               <Tabs defaultValue="summary" className="w-full">
-                <TabsList className={`grid w-full h-auto p-2 glass border-2 border-white/50 elevation-sm ${
+                <TabsList className={`grid w-full h-auto p-1.5 md:p-2 glass border-2 border-white/50 elevation-sm ${
                   result.analysisMode === 1 ? 'grid-cols-3' : 'grid-cols-2'
                 }`}>
-                  <TabsTrigger value="summary" className="text-lg py-4 data-[state=active]:bg-white data-[state=active]:shadow-md">
-                    Results Summary
+                  <TabsTrigger value="summary" className="text-sm md:text-lg py-3 md:py-4 data-[state=active]:bg-white data-[state=active]:shadow-md">
+                    Results<span className="hidden sm:inline"> Summary</span>
                   </TabsTrigger>
-                  <TabsTrigger value="montecarlo" className="text-lg py-4 data-[state=active]:bg-white data-[state=active]:shadow-md">
+                  <TabsTrigger value="montecarlo" className="text-sm md:text-lg py-3 md:py-4 data-[state=active]:bg-white data-[state=active]:shadow-md">
                     Monte Carlo
                   </TabsTrigger>
                   {result.analysisMode === 1 && (
-                    <TabsTrigger value="breakeven" className="text-lg py-4 data-[state=active]:bg-white data-[state=active]:shadow-md">
-                      Break-even Analysis
+                    <TabsTrigger value="breakeven" className="text-sm md:text-lg py-3 md:py-4 data-[state=active]:bg-white data-[state=active]:shadow-md">
+                      Break-even
                     </TabsTrigger>
                   )}
                 </TabsList>
                 
-                <TabsContent value="summary" className="mt-8">
+                <TabsContent value="summary" className="mt-4 md:mt-8">
                   <SimulationResults result={result} />
                 </TabsContent>
                 
-                <TabsContent value="montecarlo" className="mt-8">
+                <TabsContent value="montecarlo" className="mt-4 md:mt-8">
                   <MonteCarloDetails result={result} />
                 </TabsContent>
                 
                 {result.analysisMode === 1 && (
-                  <TabsContent value="breakeven" className="mt-8">
+                  <TabsContent value="breakeven" className="mt-4 md:mt-8">
                     <BreakEven3DChart result={result} />
                   </TabsContent>
                 )}
@@ -291,22 +307,31 @@ export default function App() {
       )}
       
       {/* Footer */}
-      <footer className="bg-gradient-to-br from-slate-900 via-blue-900 to-cyan-900 text-white py-16">
-        <div className="container mx-auto px-6 text-center">
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
-              <Cpu className="size-7 text-white" />
+      <footer className="bg-gradient-to-br from-slate-900 via-blue-900 to-cyan-900 text-white py-12 md:py-16">
+        <div className="container mx-auto px-4 md:px-6 text-center">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 mb-4 md:mb-6">
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center">
+              <Cpu className="size-6 md:size-7 text-white" />
             </div>
-            <h3 className="text-2xl font-semibold">Smart Construction Economic Analysis</h3>
+            <h3 className="text-xl md:text-2xl font-semibold">Smart Construction Economic Analysis</h3>
           </div>
-          <p className="text-blue-100 mb-3 text-lg">
+          <p className="text-blue-100 mb-2 md:mb-3 text-base md:text-lg px-4">
             Construction Safety Technology Investment Decision Support System
           </p>
-          <p className="text-blue-200/70 mb-4">
+          <p className="text-blue-200/70 mb-4 text-sm md:text-base px-4">
             Project Types: Railway, Building, Road Pavement, Agricultural Water, Water Supply, Sewage
           </p>
-          <div className="flex items-center justify-center gap-2 text-blue-300/80 text-sm">
-            <Mail className="size-4" />
+          <div className="mb-4 md:mb-6 p-3 md:p-4 bg-white/10 rounded-lg border border-white/20 backdrop-blur-sm mx-4">
+            <div className="flex items-center justify-center gap-2 md:gap-3 mb-1 md:mb-2">
+              <span className="text-lg md:text-xl">🔒</span>
+              <p className="text-blue-100 font-semibold text-sm md:text-base">Privacy & Data Security</p>
+            </div>
+            <p className="text-blue-300/80 text-xs text-center">
+              All user inputs are not stored and are immediately discarded after calculation.
+            </p>
+          </div>
+          <div className="flex items-center justify-center gap-2 text-blue-300/80 text-xs md:text-sm">
+            <Mail className="size-3 md:size-4" />
             <span>pjh120561@yonsei.ac.kr</span>
           </div>
         </div>
