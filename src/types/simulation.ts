@@ -3,7 +3,6 @@ export type ProjectType =
   | 'railway' 
   | 'building' 
   | 'roadPaving' 
-  | 'roadEarthBridge' 
   | 'agricultural' 
   | 'waterSupply' 
   | 'sewerage';

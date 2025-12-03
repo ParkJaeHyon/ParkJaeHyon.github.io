@@ -53,28 +53,8 @@ export const projectConfigs: Record<ProjectType, ProjectTypeConfig> = {
     ]
   },
   
-  roadEarthBridge: {
-    code: '④',
-    name: 'Road Earth + Bridge',
-    nameKo: '도로 토공+교량',
-    durationFormula: (params) => {
-      const W = params.width; // 도로폭
-      const L = params.length * 1000; // km to m
-      const BL = params.bridgeLength; // 교량연장
-      const C = params.totalCost / 1000000; // KRW to 백만원
-      return -160.855 - 14.288 * W + 164.473 * Math.log(L) - 1.474 * BL + 0.052 * C;
-    },
-    workerCount: 0,
-    fatalityRate: 0,
-    specificInputs: [
-      { key: 'width', label: 'Road Width (W)', unit: 'm', type: 'number', min: 1, defaultValue: 12 },
-      { key: 'length', label: 'Length (L)', unit: 'km', type: 'number', min: 0.1, defaultValue: 15 },
-      { key: 'bridgeLength', label: 'Bridge Length (BL)', unit: 'm', type: 'number', min: 0, defaultValue: 500 }
-    ]
-  },
-  
   agricultural: {
-    code: '⑤',
+    code: '④',
     name: 'Agricultural Irrigation',
     nameKo: '농업용수',
     durationFormula: (params) => {
@@ -90,7 +70,7 @@ export const projectConfigs: Record<ProjectType, ProjectTypeConfig> = {
   },
   
   waterSupply: {
-    code: '⑥',
+    code: '⑤',
     name: 'Water Supply',
     nameKo: '상수도',
     durationFormula: (params) => {
@@ -109,7 +89,7 @@ export const projectConfigs: Record<ProjectType, ProjectTypeConfig> = {
   },
   
   sewerage: {
-    code: '⑦',
+    code: '⑥',
     name: 'Sewerage',
     nameKo: '하수도',
     durationFormula: (params) => {

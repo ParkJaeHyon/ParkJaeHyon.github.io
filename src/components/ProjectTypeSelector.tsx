@@ -16,8 +16,6 @@ export function ProjectTypeSelector({ value, onChange }: ProjectTypeSelectorProp
         return LucideIcons.Building2;
       case 'roadPaving':
         return LucideIcons.Construction;
-      case 'roadEarthBridge':
-        return LucideIcons.Bridge;
       case 'agricultural':
         return LucideIcons.Droplets;
       case 'waterSupply':
@@ -31,7 +29,7 @@ export function ProjectTypeSelector({ value, onChange }: ProjectTypeSelectorProp
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {(Object.keys(projectConfigs) as ProjectType[]).map((type) => {
+      {(Object.keys(projectConfigs) as ProjectType[]).map((type, index) => {
         const config = projectConfigs[type];
         const Icon = getIcon(type);
         const isSelected = value === type;
@@ -51,6 +49,9 @@ export function ProjectTypeSelector({ value, onChange }: ProjectTypeSelectorProp
               }
             `}
           >
+            {/* Number Badge */}
+            {/* Removed number badge */}
+            
             {isSelected && (
               <div className="absolute top-4 right-4 w-7 h-7 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-300">
                 <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -72,7 +73,7 @@ export function ProjectTypeSelector({ value, onChange }: ProjectTypeSelectorProp
                 ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white' 
                 : 'bg-gray-200 text-gray-700 group-hover:bg-blue-200 group-hover:text-blue-700'
             }`}>
-              {config.code}
+              {index + 1}
             </div>
             
             <h3 className={`mb-2 text-lg font-semibold transition-colors ${

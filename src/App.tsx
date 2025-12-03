@@ -71,9 +71,9 @@ export default function App() {
               </div>
               
               <h1 className="text-3xl md:text-5xl lg:text-7xl tracking-tight mb-2 text-center pb-2">
-                Advanced Construction
+                ECOnomic Evaluation of
                 <span className="block bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent mt-2 md:mt-3 text-4xl md:text-5xl lg:text-[64px] text-center pb-2 md:pb-3 leading-tight overflow-visible">
-                  Technology Assessment
+                  Safety Technology Adoption
                 </span>
               </h1>
               
