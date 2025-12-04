@@ -469,17 +469,19 @@ function OptimalWorkforceRecommendation({ result }: { result: SimulationResult }
   const appliedWorkers = Math.round(currentWorkers * (wearableApplyRate / 100));
   
   // Calculate break-even workforce
-  const costReductionPerWorker = (result.meanSafetyCost * (safetyEfficiency / 100)) / currentWorkers;
-  const costPerWorker = wearableUnitPrice;
-  const minWorkersNeeded = Math.ceil(costPerWorker / costReductionPerWorker);
+  // Tech Cost = unitPrice × workers, Cost Reduction = meanSafetyCost × efficiency
+  // Break-even: meanSafetyCost × efficiency = unitPrice × workers
+  const totalCostReduction = result.meanSafetyCost * (safetyEfficiency / 100);
+  const maxRecommendedWorkers = Math.floor(totalCostReduction / wearableUnitPrice);
   
-  const isViable = appliedWorkers >= minWorkersNeeded;
+  const isNotViable = maxRecommendedWorkers < 1;
+  const isViable = !isNotViable && appliedWorkers <= maxRecommendedWorkers;
   const netBenefit = result.netBenefit || 0;
   
   return (
-    <div className={`mt-6 p-8 rounded-2xl border-2 ${isViable ? 'bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-300' : 'bg-gradient-to-br from-orange-50 to-red-50 border-orange-300'}`}>
+    <div className={`mt-6 p-8 rounded-2xl border-2 ${isNotViable ? 'bg-gradient-to-br from-red-50 to-pink-50 border-red-300' : isViable ? 'bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-300' : 'bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-300'}`}>
       <div className="flex items-start gap-4">
-        <div className={`w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 ${isViable ? 'bg-blue-500' : 'bg-orange-500'}`}>
+        <div className={`w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 ${isNotViable ? 'bg-red-500' : isViable ? 'bg-blue-500' : 'bg-orange-500'}`}>
           <Users className="size-10 text-white" />
         </div>
         
@@ -504,39 +506,39 @@ function OptimalWorkforceRecommendation({ result }: { result: SimulationResult }
               </div>
               
               <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
-                <p className="text-sm text-muted-foreground mb-1">Min. Required</p>
-                <p className="text-2xl font-semibold text-purple-600">{minWorkersNeeded}</p>
+                <p className="text-sm text-muted-foreground mb-1">Max. Recommended</p>
+                <p className="text-2xl font-semibold text-purple-600">{isNotViable ? 'N/A' : maxRecommendedWorkers}</p>
               </div>
             </div>
             
-            <div className={`p-6 rounded-xl border-2 ${isViable ? 'bg-blue-100 border-blue-400' : 'bg-orange-100 border-orange-400'}`}>
-              <p className={`text-lg ${isViable ? 'text-blue-900' : 'text-orange-900'}`}>
-                {isViable ? (
+            <div className={`p-6 rounded-xl border-2 ${isNotViable ? 'bg-red-100 border-red-400' : isViable ? 'bg-blue-100 border-blue-400' : 'bg-orange-100 border-orange-400'}`}>
+              <p className={`text-lg ${isNotViable ? 'text-red-900' : isViable ? 'text-blue-900' : 'text-orange-900'}`}>
+                {isNotViable ? (
                   <>
-                    <strong>✅ Based on economic criteria, the technology should be applied to at least {minWorkersNeeded} workers for a viable investment.</strong>
+                    <strong>❌ This wearable technology is not economically viable at the current unit price and efficiency settings.</strong>
                     <br />
-                    <span className="text-base">Current application ({appliedWorkers} workers) meets the minimum requirement. Net benefit: {formatCurrency(netBenefit)}.</span>
+                    <span className="text-base">The cost reduction per worker ({formatCurrency(totalCostReduction / currentWorkers)}) is insufficient to justify even a single unit ({formatCurrency(wearableUnitPrice)}). Consider improving efficiency or reducing unit costs. Net benefit: {formatCurrency(netBenefit)}.</span>
+                  </>
+                ) : isViable ? (
+                  <>
+                    <strong>✅ Based on economic criteria, the technology should be applied to a maximum of {maxRecommendedWorkers} workers for a viable investment.</strong>
+                    <br />
+                    <span className="text-base">Current application ({appliedWorkers} workers) is within the recommended range. Net benefit: {formatCurrency(netBenefit)}.</span>
                   </>
                 ) : (
                   <>
-                    <strong>❌ Under the current workforce scale, subscription-based technology investment is inefficient.</strong>
+                    <strong>⚠️ Current application exceeds the economically viable workforce size.</strong>
                     <br />
-                    <span className="text-base">You need to apply the technology to at least {minWorkersNeeded} workers, but currently only {appliedWorkers} workers are covered. Consider increasing the application rate or workforce size.</span>
+                    <span className="text-base">To achieve positive returns, reduce application to {maxRecommendedWorkers} workers or fewer. Current application ({appliedWorkers} workers) results in negative net benefit: {formatCurrency(netBenefit)}.</span>
                   </>
                 )}
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
-                <p className="text-sm text-muted-foreground mb-1">Cost per Worker</p>
-                <p className="text-xl font-semibold text-orange-600">{formatCurrency(wearableUnitPrice)}</p>
-              </div>
-              
-              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
-                <p className="text-sm text-muted-foreground mb-1">Savings per Worker</p>
-                <p className="text-xl font-semibold text-green-600">{formatCurrency(costReductionPerWorker)}</p>
-              </div>
+            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+              <p className="text-sm text-gray-700">
+                <strong>Note:</strong> The maximum recommended workforce is calculated based on the break-even point where cost reduction equals technology investment. Applying to fewer workers increases net benefit.
+              </p>
             </div>
           </div>
         </div>
