@@ -328,13 +328,16 @@ export function SimulationResults({ result }: SimulationResultsProps) {
             </Table>
             
             <div className="mt-6">
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={result.efficiencyTable}>
+              <ResponsiveContainer width="100%" height={350}>
+                <LineChart data={result.efficiencyTable} margin={{ top: 5, right: 30, left: 20, bottom: 25 }}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="efficiency" label={{ value: 'Safety Efficiency (%)', position: 'insideBottom', offset: -5 }} />
+                  <XAxis 
+                    dataKey="efficiency" 
+                    label={{ value: 'Safety Efficiency (%)', position: 'insideBottom', offset: -15 }} 
+                  />
                   <YAxis />
                   <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                  <Legend />
+                  <Legend wrapperStyle={{ paddingTop: '20px' }} />
                   <Line type="monotone" dataKey="costReduction" stroke="#10b981" name="Cost Reduction" strokeWidth={2} />
                   <Line type="monotone" dataKey="netBenefit" stroke="#3b82f6" name="Net Benefit" strokeWidth={2} />
                 </LineChart>
