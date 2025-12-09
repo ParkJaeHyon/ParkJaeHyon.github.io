@@ -1,6 +1,6 @@
 
   {
-      "name": "ECOSTAT_04",
+      "name": "ECOSTAT",
       "version": "0.1.0",
       "private": true,
       "dependencies": {
