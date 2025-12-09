@@ -20,7 +20,7 @@ export function ModeSelector({ value, onChange }: ModeSelectorProps) {
       value: 2,
       icon: Users,
       title: 'Mode 2',
-      subtitle: 'Safety Robot Impact Analysis',
+      subtitle: 'Feasibility Analysis for Safety Robots',
       description: 'Analyze the combined effects of labor reduction and accident prevention from deploying safety robots',
       color: 'green'
     },

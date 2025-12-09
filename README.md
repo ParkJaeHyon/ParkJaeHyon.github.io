@@ -1,7 +1,7 @@
 
-  # ECOSTAT
+  # ECOSTAT_04
 
-  This is a code bundle for ECOSTAT. The original project is available at https://www.figma.com/design/cqVNX2FSXCbBU8qrhwbJbK/ECOSTAT.
+  This is a code bundle for ECOSTAT_04. The original project is available at https://www.figma.com/design/CQ5a3XjBuBxpxsKES4ixWe/ECOSTAT_04.
 
   ## Running the code
 
